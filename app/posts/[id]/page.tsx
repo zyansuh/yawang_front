@@ -1,13 +1,21 @@
-import { posts, getCategoryById } from '@/lib/data';
-import { notFound } from 'next/navigation';
-import Link from 'next/link';
+'use client';
 
-export default async function PostDetailPage({
+import { use } from 'react';
+import { posts, getCategoryById } from '@/lib/data';
+import { notFound, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import BookmarkButton from '@/components/BookmarkButton';
+import { useAuth } from '@/contexts/AuthContext';
+import { UserRole } from '@/types';
+
+export default function PostDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
+  const { id } = use(params);
+  const { user } = useAuth();
+  const router = useRouter();
   const post = posts.find((p) => p.id === id);
 
   if (!post) {
@@ -15,6 +23,69 @@ export default async function PostDetailPage({
   }
 
   const category = getCategoryById(post.categoryId);
+
+  // 권한 체크
+  const roleLevel: Record<UserRole | 'guest', number> = {
+    guest: 0,
+    member: 1,
+    verified: 2,
+    premium: 3,
+  };
+
+  const userLevel = roleLevel[user?.role || 'guest'];
+  const requiredLevel = roleLevel[
+    post.level === 'base' ? 'guest' :
+    post.level === 'verified' ? 'verified' : 'premium'
+  ];
+
+  const hasAccess = userLevel >= requiredLevel;
+
+  // 권한 없음 화면
+  if (!hasAccess) {
+    return (
+      <div className="max-w-screen-xl mx-auto px-4 py-12 text-center">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 max-w-md mx-auto">
+          <div className="text-6xl mb-4">🔒</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">접근 권한이 없습니다</h2>
+          <p className="text-gray-600 mb-6">
+            이 콘텐츠는{' '}
+            {post.level === 'verified' && '인증 회원'}
+            {post.level === 'premium' && '프리미엄 회원'}만 볼 수 있습니다.
+          </p>
+          {!user && (
+            <button
+              onClick={() => router.push('/auth/login')}
+              className="w-full py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors mb-3"
+            >
+              로그인하기
+            </button>
+          )}
+          {user && post.level === 'verified' && (
+            <button
+              onClick={() => router.push('/profile/verify')}
+              className="w-full py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors mb-3"
+            >
+              2차 인증하기
+            </button>
+          )}
+          {user && post.level === 'premium' && (
+            <button
+              onClick={() => router.push('/subscription')}
+              className="w-full py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors mb-3"
+            >
+              프리미엄 구독하기
+            </button>
+          )}
+          <button
+            onClick={() => router.back()}
+            className="w-full py-2 text-sm text-gray-600 hover:text-gray-900"
+          >
+            뒤로 가기
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6">
@@ -134,9 +205,7 @@ export default async function PostDetailPage({
 
           {/* 액션 버튼 */}
           <div className="mt-8 pt-6 border-t flex gap-3">
-            <button className="flex-1 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
-              ⭐ 북마크
-            </button>
+            <BookmarkButton postId={post.id} className="flex-1" />
             <button className="flex-1 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
               📤 공유
             </button>

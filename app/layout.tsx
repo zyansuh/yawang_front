@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { BookmarkProvider } from "@/contexts/BookmarkContext";
+import { SearchProvider } from "@/contexts/SearchContext";
 import Header from "@/components/Header";
 import BottomNav from "@/components/BottomNav";
+import SearchModal from "@/components/SearchModal";
 
 export const metadata: Metadata = {
   title: "야왕 - 건강 지식 플랫폼",
@@ -18,11 +21,16 @@ export default function RootLayout({
     <html lang="ko">
       <body className="bg-gray-50">
         <AuthProvider>
-          <Header />
-          <main className="pt-14 pb-16 min-h-screen">
-            {children}
-          </main>
-          <BottomNav />
+          <BookmarkProvider>
+            <SearchProvider>
+              <Header />
+              <main className="pt-14 pb-16 min-h-screen">
+                {children}
+              </main>
+              <BottomNav />
+              <SearchModal />
+            </SearchProvider>
+          </BookmarkProvider>
         </AuthProvider>
       </body>
     </html>

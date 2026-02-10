@@ -89,7 +89,23 @@ export const categories: Category[] = [
     visibility: 'verified',
     icon: '🔒',
     description: '인증 회원 전용'
-  }
+  },
+  {
+    id: 'sensitive-advanced',
+    parentId: 'sensitive',
+    title: '심화 운동법',
+    order: 1,
+    visibility: 'verified',
+    icon: '💪'
+  },
+  {
+    id: 'premium',
+    title: '프리미엄',
+    order: 5,
+    visibility: 'premium',
+    icon: '⭐',
+    description: '프리미엄 회원 전용'
+  },
 ];
 
 // MVP용 샘플 포스트
@@ -132,7 +148,31 @@ export const posts: Post[] = [
     thumbnail: '/images/morning-stretch.jpg',
     createdAt: '2024-01-13',
     updatedAt: '2024-01-13'
-  }
+  },
+  {
+    id: '4',
+    categoryId: 'sensitive-advanced',
+    title: '[인증 필요] 전문 재활 운동 프로그램',
+    summary: '전문가 검증을 거친 심화 재활 운동 프로그램입니다.',
+    body: '상세 내용...',
+    tags: ['재활', '전문', '심화'],
+    level: 'verified',
+    isSensitive: true,
+    createdAt: '2024-01-12',
+    updatedAt: '2024-01-12'
+  },
+  {
+    id: '5',
+    categoryId: 'premium',
+    title: '[프리미엄] 1:1 맞춤 운동 컨설팅',
+    summary: '전문 트레이너의 맞춤형 운동 프로그램을 받아보세요.',
+    body: '상세 내용...',
+    tags: ['맞춤', '프리미엄', '전문가'],
+    level: 'premium',
+    isSensitive: false,
+    createdAt: '2024-01-11',
+    updatedAt: '2024-01-11'
+  },
 ];
 
 // 유틸리티 함수

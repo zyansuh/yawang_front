@@ -2,10 +2,12 @@
 
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
+import { useSearch } from '@/contexts/SearchContext';
 import { usePathname } from 'next/navigation';
 
 export default function Header() {
   const { user, logout } = useAuth();
+  const { openSearch } = useSearch();
   const pathname = usePathname();
 
   // auth 페이지에서는 헤더 숨김
@@ -22,11 +24,15 @@ export default function Header() {
           </Link>
           
           <div className="flex items-center space-x-4">
-            <button className="text-gray-600 hover:text-gray-900">
+            <button 
+              onClick={openSearch}
+              className="text-gray-600 hover:text-gray-900 text-xl"
+              aria-label="검색"
+            >
               🔍
             </button>
             {user && (
-              <button className="text-gray-600 hover:text-gray-900">
+              <button className="text-gray-600 hover:text-gray-900 text-xl">
                 🔔
               </button>
             )}
