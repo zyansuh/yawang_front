@@ -1,36 +1,165 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 야왕 - 건강 지식 플랫폼
 
-## Getting Started
+70·80대도 쉽게 사용하는 네이버카페형 건강 지식 앱
 
-First, run the development server:
+## 🚀 기술 스택
+
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS 4
+- **디자인 레퍼런스**: [헤메코랩](https://www.hemekolab.com/)
+
+## 📁 프로젝트 구조
+
+```
+odam_front/
+├── app/                    # Next.js App Router 페이지
+│   ├── layout.tsx         # 루트 레이아웃
+│   ├── page.tsx           # 홈 페이지
+│   ├── categories/        # 카테고리 페이지
+│   ├── posts/             # 콘텐츠 상세 페이지
+│   ├── bookmarks/         # 북마크 페이지
+│   └── profile/           # 프로필 페이지
+├── components/            # 재사용 컴포넌트
+│   ├── Header.tsx        # 헤더
+│   ├── BottomNav.tsx     # 하단 탭 네비게이션
+│   ├── CategoryCard.tsx  # 카테고리 카드
+│   └── PostCard.tsx      # 콘텐츠 카드
+├── lib/                  # 유틸리티 및 데이터
+│   └── data.ts          # 카테고리/포스트 데이터
+└── types/               # TypeScript 타입 정의
+    └── index.ts
+```
+
+## 🎯 MVP 구현 사항
+
+### ✅ 완료된 기능
+
+1. **홈 화면**
+   - 환영 배너
+   - 주요 카테고리 카드
+   - 최근 콘텐츠
+   - 오늘의 건강 팁
+
+2. **카테고리 시스템**
+   - 3단 계층 구조 (대 → 중 → 소)
+   - 카테고리별 페이지
+   - 권한 레벨 표시
+
+3. **콘텐츠 표시**
+   - 카드형 레이아웃
+   - 태그 시스템
+   - 상세 페이지
+
+4. **네비게이션**
+   - 고정 헤더
+   - 하단 탭 (홈, 카테고리, 북마크, 내 정보)
+   - 브레드크럼
+
+5. **UI/UX**
+   - 반응형 디자인
+   - 큰 폰트/버튼 (접근성)
+   - 깔끔한 카드 레이아웃
+
+### 🔜 다음 단계 (향후 구현)
+
+- [ ] 로그인/인증 시스템
+- [ ] 초대 코드 기능
+- [ ] 2차 인증 (SMS)
+- [ ] 구독 시스템
+- [ ] 북마크 기능
+- [ ] 검색 기능
+- [ ] CMS 연동
+- [ ] 영상 스트리밍
+- [ ] 워터마크
+- [ ] 관리자 페이지
+
+## 🛠 개발 시작하기
+
+### 설치
+
+```bash
+npm install
+```
+
+### 개발 서버 실행
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+브라우저에서 [http://localhost:3000](http://localhost:3000) 접속
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 빌드
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## 📱 주요 페이지
 
-To learn more about Next.js, take a look at the following resources:
+- `/` - 홈
+- `/categories` - 전체 카테고리
+- `/categories/[id]` - 카테고리 상세
+- `/posts/[id]` - 콘텐츠 상세
+- `/bookmarks` - 북마크
+- `/profile` - 내 정보
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🎨 디자인 시스템
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 색상
+- Primary: Blue (600)
+- Background: Gray (50)
+- Text: Gray (900, 600)
+- Border: Gray (100, 200)
 
-## Deploy on Vercel
+### 타이포그래피
+- 제목: 2xl ~ 3xl, Bold
+- 본문: base ~ lg
+- 캡션: xs ~ sm
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 간격
+- 카드 간격: 4 (1rem)
+- 섹션 간격: 8-10 (2-2.5rem)
+- 패딩: 4-8 (1-2rem)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📝 데이터 구조
+
+### 카테고리 (Category)
+```typescript
+{
+  id: string;
+  parentId?: string;
+  title: string;
+  order: number;
+  visibility: 'public' | 'member' | 'verified' | 'premium';
+  icon?: string;
+  description?: string;
+}
+```
+
+### 콘텐츠 (Post)
+```typescript
+{
+  id: string;
+  categoryId: string;
+  title: string;
+  summary: string;
+  body: string;
+  tags: string[];
+  level: 'base' | 'verified' | 'premium';
+  isSensitive: boolean;
+  thumbnail?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+```
+
+## 🚀 배포
+
+Vercel, Netlify 등에서 간편하게 배포 가능합니다.
+
+## 📄 라이선스
+
+MIT
