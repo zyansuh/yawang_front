@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AuthProvider } from "@/contexts/AuthContext";
 import Header from "@/components/Header";
 import BottomNav from "@/components/BottomNav";
 
@@ -16,11 +17,13 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="bg-gray-50">
-        <Header />
-        <main className="pt-14 pb-16 min-h-screen">
-          {children}
-        </main>
-        <BottomNav />
+        <AuthProvider>
+          <Header />
+          <main className="pt-14 pb-16 min-h-screen">
+            {children}
+          </main>
+          <BottomNav />
+        </AuthProvider>
       </body>
     </html>
   );

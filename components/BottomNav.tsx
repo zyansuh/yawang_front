@@ -13,6 +13,11 @@ const navItems = [
 export default function BottomNav() {
   const pathname = usePathname();
 
+  // auth 페이지에서는 하단 네비 숨김
+  if (pathname?.startsWith('/auth')) {
+    return null;
+  }
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
       <div className="max-w-screen-xl mx-auto">
